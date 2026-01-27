@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wood Plane Game</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      src="https://kit.fontawesome.com/bd81d20924.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+
+  <body>
+    <!-- Page Title -->
+    <h1 class="title">Label - IT</h1>
+
+    <div></div>
+
+    <!-- START SCREEN -->
+    <div id="screen-start" class="screens">
+      <button id="startBtn">START</button>
+    </div>
+
+    <!-- TUTORIAL SCREEN -->
+    <div id="screen-tutorial" class="screens hidden">
+      <div class="tutorial-copy">
+        <p class="tutorial-text">
+          Welcome to Label-It!<br /><br />
+          Your goal is to correctly label the parts of each tool by dragging and
+          dropping the labels onto the appropriate areas of the image.<br /><br />
+          Get every label right and unlock the next level!<br /><br />
+          Good luck and have fun!
+        </p>
+        <button id="next">Next</button>
+      </div>
+      <img
+        class="tutorial-image"
+        src="Images/Tutorial_image.png"
+        alt="Dragging Label Tutorial Image"
+      />
+    </div>
+
+    <!-- LEVEL SELECT SCREEN -->
+    <div id="screen-levels" class="screens hidden">
+      <div class="levels-grid">
+        <button class="level-btn" data-level="1">LVL 1</button>
+        <button class="level-btn" data-level="2" disabled>LVL 2</button>
+        <button class="level-btn" data-level="3" disabled>LVL 3</button>
+        <button class="level-btn" data-level="4" disabled>LVL 4</button>
+        <button class="level-btn" data-level="5" disabled>LVL 5</button>
+        <button class="level-btn" data-level="6" disabled>LVL 6</button>
+      </div>
+      <div>
+        <button id="backToTutorialBtn">⬅ Back to Tutorial</button>
+      </div>
+    </div>
+
+    <!-- GAME SCREEN -->
+    <div id="screen-game" class="screens hidden">
+      <div class="game-container">
+        <!-- Draggable Labels (Left Side) -->
+        <div class="labels-container" id="labelsContainer">
+          <!-- Labels will be dynamically added here -->
+        </div>
+
+        <!-- Image Area -->
+        <div class="plane-area">
+          <div class="game-topbar">
+            <div id="assembly-header"></div>
+            <button id="audio-controls" class="hidden" aria-label="Mute audio">
+              <i class="fa-solid fa-volume-high"></i>
+            </button>
+          </div>
+          <!-- Wood Plane Image -->
+          <div class="image-wrapper" id="imageWrapper">
+            <img src="" alt="Wood plane diagram" />
+
+            <!-- drop zones will be dynamically added here -->
+          </div>
+
+          <!-- Check Answers Button -->
+
+          <div id="scoreDisplay" class="score-display"></div>
+          <div class="button-container">
+            <button id="resetBtn">Reset Game</button>
+            <button id="checkBtn">Check Answers</button>
+            <button id="backBtn">⬅ Back</button>
+            <button class="hidden" id="nextLvlBtn">➡ Next Level!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <audio
+      id="bgm"
+      src="Audios/educational-education-school-music-446639.mp3"
+      autoplay
+      loop
+    >
+      Your browser does not support the audio element.
+    </audio>
+    <!-- JS File -->
+    <script src="script.js"></script>
+  </body>
+</html>
