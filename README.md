@@ -23,6 +23,8 @@ Label-IT is an interactive educational game designed to help students learn the 
 - JavaScript
 
 ## Deployment
+Live Demo
+https://abeladugna.github.io/label-it/
 This project is deployed as a static website and runs entirely in the browser.
 
 ## Author
