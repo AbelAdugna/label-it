@@ -1,3 +1,19 @@
+/* ======================================================
+   Label-IT — Main Game Logic
+   ------------------------------------------------------
+   This file controls:
+   - Screen navigation (start, tutorial, levels, game)
+   - Level loading and setup
+   - Drag and drop logic
+   - Scoring and progression
+   ====================================================== */
+
+
+/* ============================================================================
+   SCREEN MANAGEMENT
+   Handles which part of the UI is currently visible to the player.
+============================================================================ */
+
 const screens = {
   start: document.getElementById("screen-start"),
   tutorial: document.getElementById("screen-tutorial"),
@@ -7,43 +23,62 @@ const screens = {
 
 let currentScreen = "start";
 
+/**
+ * Shows one screen and hides all others.
+ */
 function showScreen(name) {
   Object.values(screens).forEach((screen) => screen.classList.add("hidden"));
-
   screens[name].classList.remove("hidden");
   currentScreen = name;
 }
 
-const startBtn = document.getElementById("startBtn");
 
+/* ============================================================================
+   AUDIO + START BUTTON FLOW
+============================================================================ */
+
+const startBtn = document.getElementById("startBtn");
+const bgm = document.getElementById("bgm");
+const audioControls = document.getElementById("audio-controls");
+
+/**
+ * Begins tutorial, enables audio button, and plays music.
+ */
 startBtn.addEventListener("click", () => {
-  audioControls.classList.remove("hidden"); 
+  audioControls.classList.remove("hidden");
   showScreen("tutorial");
   bgm?.play().catch(() => {});
 });
 
-const bgm = document.getElementById("bgm");
-const audioControls = document.getElementById("audio-controls");
-
+/**
+ * Toggles background music on/off and updates icon.
+ */
 audioControls.addEventListener("click", () => {
-    if (bgm.paused) {
-      bgm.play().catch(() => {});
-      audioControls.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
-    } else {
-      bgm.pause();
-      audioControls.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
-    }
+  if (bgm.paused) {
+    bgm.play().catch(() => {});
+    audioControls.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+  } else {
+    bgm.pause();
+    audioControls.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
+  }
 });
 
-const nextTutorialBtn = document.getElementById("next");
-nextTutorialBtn.addEventListener("click", () => {
+/** Moves from tutorial → level selection */
+document.getElementById("next").addEventListener("click", () => {
   showScreen("levels");
 });
 
-const backToTutorialBtn = document.getElementById("backToTutorialBtn");
-backToTutorialBtn.addEventListener("click", () => {
+/** Returns from level select → tutorial */
+document.getElementById("backToTutorialBtn").addEventListener("click", () => {
   showScreen("tutorial");
 });
+
+
+/* ============================================================================
+   LEVEL DATA
+   Defines each level’s title, image, and label positions.
+   All values remain explicit as originally authored.
+============================================================================ */
 
 const LEVELS = {
   1: {
@@ -126,6 +161,11 @@ const LEVELS = {
   },
 };
 
+
+/* ============================================================================
+   DOM REFERENCES
+============================================================================ */
+
 const labelsContainer = document.getElementById("labelsContainer");
 const imageWrapper = document.getElementById("imageWrapper");
 const scoreDisplay = document.getElementById("scoreDisplay");
@@ -138,8 +178,17 @@ const nextLvlBtn = document.getElementById("nextLvlBtn");
 let draggables = [];
 let dropZones = [];
 let placedAnswers = {};
-let currentLevelId = Number(1);
+let currentLevelId = 1;
 
+
+/* ============================================================================
+   LEVEL INITIALIZATION
+   Builds labels, places drop zones, and resets progress.
+============================================================================ */
+
+/**
+ * Loads a level by ID and prepares all UI components.
+ */
 function loadLevel(levelId) {
   currentLevelId = levelId;
   const level = LEVELS[levelId];
@@ -160,6 +209,7 @@ function loadLevel(levelId) {
   showScreen("game");
 }
 
+/** Builds the draggable label elements for the current level. */
 function buildLabels(level) {
   labelsContainer.innerHTML = "";
 
@@ -173,6 +223,7 @@ function buildLabels(level) {
   });
 }
 
+/** Places the drop zones for a level based on configured coordinates. */
 function buildDropZones(level) {
   imageWrapper.querySelectorAll(".drop-zone").forEach((z) => z.remove());
 
@@ -186,6 +237,12 @@ function buildDropZones(level) {
   });
 }
 
+
+/* ============================================================================
+   DRAG + DROP INTERACTIONS
+============================================================================ */
+
+/** Enables dragging behavior for draggable labels. */
 function addDragEvents() {
   draggables = document.querySelectorAll(".draggable");
 
@@ -196,6 +253,7 @@ function addDragEvents() {
   });
 }
 
+/** Enables drop-zone highlighting, placement logic, and state tracking. */
 function addDropZoneEvents() {
   dropZones = document.querySelectorAll(".drop-zone");
 
@@ -215,13 +273,15 @@ function addDropZoneEvents() {
       const draggedPart = e.dataTransfer.getData("text/plain");
       const correctPart = zone.dataset.part;
 
-      // Remove previous placement of this part
+      // Remove previous placement of this part (prevent duplicates)
       for (let key in placedAnswers) {
         if (placedAnswers[key] === draggedPart) {
           delete placedAnswers[key];
+
           const oldZone = document.querySelector(
             `.drop-zone[data-part="${key}"]`
           );
+
           if (oldZone) {
             oldZone.textContent = "";
             oldZone.classList.remove("filled");
@@ -229,6 +289,7 @@ function addDropZoneEvents() {
         }
       }
 
+      // Apply new placement
       zone.textContent = draggedPart.replace("-", " ");
       zone.classList.add("filled");
       placedAnswers[correctPart] = draggedPart;
@@ -236,15 +297,26 @@ function addDropZoneEvents() {
   });
 }
 
+
+/* ============================================================================
+   SCORING + ANSWER VALIDATION
+============================================================================ */
+
+/**
+ * Evaluates player answers, locks labels, displays score,
+ * and reveals "Next Level" if fully correct.
+ */
 checkBtn.addEventListener("click", () => {
   let correctCount = 0;
+
+  // Disable labels after scoring
   draggables.forEach((label) => {
-    // checkBtn.disabled = true;
     label.draggable = false;
     label.classList.remove("hoverEffect");
     label.classList.add("greyed-out");
   });
 
+  // Evaluate each drop zone
   dropZones.forEach((zone) => {
     const correctPart = zone.dataset.part;
     const placedPart = placedAnswers[correctPart];
@@ -264,18 +336,29 @@ checkBtn.addEventListener("click", () => {
     }
   });
 
+  // Score summary
   scoreDisplay.textContent = `Score: ${correctCount} / ${dropZones.length}`;
 
   if (correctCount === dropZones.length) {
-    scoreDisplay.textContent += "\nWell done! You labeled all parts correctly.";
+    scoreDisplay.textContent +=
+      "\nWell done! You labeled all parts correctly.";
+
+    // Unlock next level if available
     if (LEVELS[currentLevelId + 1]) {
       nextLvlBtn.classList.remove("hidden");
     }
   } else {
-    scoreDisplay.textContent += "\nSome labels are incorrect. Try again!";
+    scoreDisplay.textContent +=
+      "\nSome labels are incorrect. Try again!";
   }
 });
 
+
+/* ============================================================================
+   NAVIGATION + LEVEL PROGRESSION
+============================================================================ */
+
+/** Allows player to choose a level from the level-select screen. */
 levelBtns.forEach((btn) => {
   btn.addEventListener("click", () => {
     const levelId = Number(btn.dataset.level);
@@ -283,19 +366,24 @@ levelBtns.forEach((btn) => {
   });
 });
 
+/** Resets and reloads the current level. */
 resetBtn.addEventListener("click", () => {
   loadLevel(currentLevelId);
 });
 
+/** Returns to level selection. */
 backBtn.addEventListener("click", () => {
   showScreen("levels");
 });
 
+/** Loads next unlocked level and enables its button in UI. */
 nextLvlBtn.addEventListener("click", () => {
   const nextLevelId = currentLevelId + 1;
+
   if (LEVELS[nextLevelId]) {
     loadLevel(nextLevelId);
     nextLvlBtn.classList.add("hidden");
+
     levelBtns.forEach((btn) => {
       if (Number(btn.dataset.level) === nextLevelId) {
         btn.disabled = false;
