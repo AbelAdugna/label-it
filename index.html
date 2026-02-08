@@ -4,7 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Label-IT</title>
+
+    <!-- Core Stylesheet -->
     <link rel="stylesheet" href="styles.css" />
+
+    <!-- FontAwesome Icons -->
     <script
       src="https://kit.fontawesome.com/bd81d20924.js"
       crossorigin="anonymous"
@@ -12,17 +16,17 @@
   </head>
 
   <body>
-    <!-- Page Title -->
+    <!-- Application Title -->
     <h1 class="title">Label - IT</h1>
 
-    <div></div>
-
     <!-- START SCREEN -->
+    <!-- Initial screen containing the primary start action -->
     <div id="screen-start" class="screens">
       <button id="startBtn">START</button>
     </div>
 
     <!-- TUTORIAL SCREEN -->
+    <!-- Provides basic instructions and onboarding for first-time players -->
     <div id="screen-tutorial" class="screens hidden">
       <div class="tutorial-copy">
         <p class="tutorial-text">
@@ -34,6 +38,8 @@
         </p>
         <button id="next">Next</button>
       </div>
+
+      <!-- Tutorial Illustration -->
       <img
         class="tutorial-image"
         src="Images/Tutorial_image.png"
@@ -42,6 +48,7 @@
     </div>
 
     <!-- LEVEL SELECT SCREEN -->
+    <!-- Displays available levels; future levels are locked until unlocked in-game -->
     <div id="screen-levels" class="screens hidden">
       <div class="levels-grid">
         <button class="level-btn" data-level="1">LVL 1</button>
@@ -51,37 +58,40 @@
         <button class="level-btn" data-level="5" disabled>LVL 5</button>
         <button class="level-btn" data-level="6" disabled>LVL 6</button>
       </div>
+
       <div>
         <button id="backToTutorialBtn">⬅ Back to Tutorial</button>
       </div>
     </div>
 
     <!-- GAME SCREEN -->
+    <!-- Main gameplay interface: labels, image, drop zones, and scoring -->
     <div id="screen-game" class="screens hidden">
       <div class="game-container">
-        <!-- Draggable Labels (Left Side) -->
-        <div class="labels-container" id="labelsContainer">
-          <!-- Labels will be dynamically added here -->
-        </div>
 
-        <!-- Image Area -->
+        <!-- Dynamic Label List (populated per level) -->
+        <div class="labels-container" id="labelsContainer"></div>
+
+        <!-- Image and Drop Zones -->
         <div class="plane-area">
           <div class="game-topbar">
             <div id="assembly-header"></div>
+
+            <!-- Audio Toggle -->
             <button id="audio-controls" class="hidden" aria-label="Mute audio">
               <i class="fa-solid fa-volume-high"></i>
             </button>
           </div>
-          <!-- Wood Plane Image -->
+
+          <!-- Tool Image and dynamically generated drop zones -->
           <div class="image-wrapper" id="imageWrapper">
             <img src="" alt="Wood plane diagram" />
-
-            <!-- drop zones will be dynamically added here -->
           </div>
 
-          <!-- Check Answers Button -->
-
+          <!-- Score and Progress Display -->
           <div id="scoreDisplay" class="score-display"></div>
+
+          <!-- Game Action Buttons -->
           <div class="button-container">
             <button id="resetBtn">Reset Game</button>
             <button id="checkBtn">Check Answers</button>
@@ -91,6 +101,8 @@
         </div>
       </div>
     </div>
+
+    <!-- Background Music -->
     <audio
       id="bgm"
       src="Audios/educational-education-school-music-446639.mp3"
@@ -99,7 +111,8 @@
     >
       Your browser does not support the audio element.
     </audio>
-    <!-- JS File -->
+
+    <!-- Main Script -->
     <script src="script.js"></script>
   </body>
 </html>
