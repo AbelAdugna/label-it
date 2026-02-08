@@ -1,6 +1,8 @@
-/* ------------------------------ */
-/* GLOBAL PAGE STYLING */
-/* ------------------------------ */
+/* ========================================================================== */
+/* GLOBAL PAGE SETTINGS */
+/* Root-level layout, typography, and interaction settings applied to entire UI */
+/* ========================================================================== */
+
 body {
   position: relative;
   text-align: center;
@@ -12,15 +14,16 @@ body {
   font-weight: bold;
   color: wheat;
   text-shadow: 2px 3px 4px #000000;
+
+  /* Disable text selection across the app for clean drag interactions */
   user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+
   cursor: default;
-  -webkit-user-select: none; /* Safari / Chrome */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* Old IE */
 }
 
-
-/* Title */
 .title {
   text-align: center;
   font-size: 3rem;
@@ -28,16 +31,21 @@ body {
 }
 
 
+/* ========================================================================== */
+/* TUTORIAL SCREEN */
+/* Intro copy styling + tutorial image layout */
+/* ========================================================================== */
+
 .tutorial-text {
   color: rgb(255, 234, 196);
   font-size: clamp(1.2rem, 2.5vw, 1.9rem);
-
   line-height: 140%;
   text-align: center;
   max-width: 100%;
   margin: 0 20px 20px 20px;
 }
 
+/* Custom layout for the tutorial screen */
 .screen#screen-tutorial {
   flex-direction: row;
   gap: 24px;
@@ -58,22 +66,25 @@ body {
   max-width: clamp(300px, 40%, 500px);
 }
 
-/* ------------------------------ */
-/* MAIN LAYOUT */
-/* ------------------------------ */
+
+/* ========================================================================== */
+/* SCREEN MANAGEMENT */
+/* Defines the structure for start, tutorial, levels, and game screens */
+/* ========================================================================== */
 
 .screens {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 70vh;
+  min-height: 70vh; /* Ensures consistent vertical layout across screens */
 }
 
 .hidden {
-  display: none;
+  display: none; /* Core class for toggling screens */
 }
 
-#screen-levels  {
+/* Level selection layout */
+#screen-levels {
   flex-direction: column;
   gap: 30px;
 }
@@ -84,18 +95,25 @@ body {
   gap: 20px;
 }
 
+
+/* ========================================================================== */
+/* GAME LAYOUT */
+/* Main gameplay arrangement: labels, image area, and interaction controls */
+/* ========================================================================== */
+
 .game-container {
   display: flex;
   justify-content: center;
   align-items: flex-start;
   margin-top: 40px;
-  padding-bottom: 0px;
-  gap: 7vw;
+  gap: 7vw; /* Responsive spacing between label list and image area */
 }
 
-/* ------------------------------ */
+
+/* ========================================================================== */
 /* DRAGGABLE LABELS */
-/* ------------------------------ */
+/* Label styling, hover states, and disabled (greyed) appearance */
+/* ========================================================================== */
 
 .labels-container {
   display: flex;
@@ -105,7 +123,6 @@ body {
   padding: 15px;
   background-color: #583520;
   border-radius: 25px;
-
 }
 
 .draggable {
@@ -119,18 +136,19 @@ body {
   transition: 0.2s;
 }
 
+/* Hover and active states are applied through a JS-controlled class */
 .draggable.hoverEffect:hover {
   background-color: #97620f;
   transform: scale(1.085);
   cursor: grab;
 }
 
-/* When dragging */
 .draggable.hoverEffect:active {
   cursor: grabbing;
   transform: scale(1.13);
 }
 
+/* Used when labels become disabled after level completion */
 .greyed-out {
   background-color: #8f8f8f;
   border-color: #4f4f4f;
@@ -138,9 +156,11 @@ body {
   text-shadow: none;
 }
 
-/* ------------------------------ */
+
+/* ========================================================================== */
 /* IMAGE + DROP ZONES */
-/* ------------------------------ */
+/* Main image container + interactive drop areas placed via absolute coords */
+/* ========================================================================== */
 
 .plane-area {
   display: flex;
@@ -153,13 +173,13 @@ body {
   font-size: 1.8rem;
 }
 
+/* Container that holds the main tool image and the dynamic drop zones */
 .image-wrapper {
-  position: relative; /* IMPORTANT: allows absolute-positioned drop zones */
+  position: relative; /* Required for absolute-positioned drop zones */
   font-size: clamp(0.7rem, 1.7vw, 0.9rem);
-  margin-bottom: 0px;
 }
 
-/* Image styling */
+/* Tool image styling */
 .image-wrapper img {
   display: block;
   max-width: 720px;
@@ -168,9 +188,11 @@ body {
   border-radius: 25px;
 }
 
-/* ------------------------------ */
-/* DROP ZONE BASE STYLING */
-/* ------------------------------ */
+
+/* ========================================================================== */
+/* DROP ZONES */
+/* The target regions where players place draggable labels */
+/* ========================================================================== */
 
 .drop-zone {
   position: absolute;
@@ -179,70 +201,54 @@ body {
   background-color: rgba(152, 152, 152, 0.163);
   border: 3px dashed #575757;
   border-radius: 20px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   text-align: center;
   padding: 0.5%;
   font-size: 1.5em;
-  transform: translate(-50%, -50%); /* Centers the circle on coordinates */
+
+  transform: translate(-50%, -50%); /* Centers drop-zone at its coordinate */
   transition: 0.2s;
 }
 
-/* Highlight when a draggable item is over it */
+/* Visual feedback when dragging over a zone */
 .drop-zone.highlight {
   background-color: yellow;
 }
 
+/* Appearance after a label has been placed */
 .drop-zone.filled {
   color: white;
-  text-shadow: 1px 1px 0 black, -1px 1px 0 black, 1px -1px 0 black,
-    -1px -1px 0 black;
+  text-shadow: 1px 1px 0 black,
+               -1px 1px 0 black,
+                1px -1px 0 black,
+               -1px -1px 0 black;
   background-color: rgba(231, 231, 231, 0.18);
   border-color: #737373;
 }
 
-/* ------------------------------ */
+
+/* ========================================================================== */
+/* DROP ZONE COORDINATES */
+/* Per-part placement coordinates for accuracy-based scoring */
+/* ========================================================================== */
+
+.drop-zone[data-part="front-knob"] { top: 42%; left: 20%; }
+.drop-zone[data-part="handle"] { top: 27%; left: 88%; }
+.drop-zone[data-part="lever-cap"] { top: 15%; left: 49%; }
+.drop-zone[data-part="blade"] { top: 33%; left: 33%; }
+.drop-zone[data-part="chip-breaker"] { top: 31%; left: 46%; }
+.drop-zone[data-part="sole"] { top: 83%; left: 59%; }
+.drop-zone[data-part="mouth"] { top: 86%; left: 14%; }
+
+
+/* ========================================================================== */
 /* CORRECT / INCORRECT FEEDBACK */
-/* ------------------------------ */
-.drop-zone[data-part="front-knob"] {
-  top: 42%;
-  left: 20%;
-}
-
-.drop-zone[data-part="handle"] {
-  top: 27%;
-  left: 88%;
-}
-
-.drop-zone[data-part="lever-cap"] {
-  top: 15%;
-  left: 49%;
-}
-
-.drop-zone[data-part="blade"] {
-  top: 33%;
-  left: 33%;
-}
-
-.drop-zone[data-part="chip-breaker"] {
-  top: 31%;
-  left: 46%;
-}
-
-.drop-zone[data-part="sole"] {
-  top: 83%;
-  left: 59%;
-}
-
-.drop-zone[data-part="mouth"] {
-  top: 86%;
-  left: 14%;
-}
-
-/* ------------------------------ */
-/* CORRECT / INCORRECT FEEDBACK */
-/* ------------------------------ */
+/* Visual indicators applied during answer validation */
+/* ========================================================================== */
 
 .drop-zone.correct {
   background-color: rgba(0, 255, 0, 0.6);
@@ -255,43 +261,33 @@ body {
   animation: shake 0.5s ease;
 }
 
-/* Shake animation */
+/* Shake animation for incorrect answers */
 @keyframes shake {
-  0%,
-  100% {
-    transform: translate(-50%, -50%) translateX(0px);
-  }
-  25% {
-    transform: translate(-50%, -50%) translateX(-8px);
-  }
-  75% {
-    transform: translate(-50%, -50%) translateX(8px);
-  }
+  0%, 100% { transform: translate(-50%, -50%) translateX(0px); }
+  25% { transform: translate(-50%, -50%) translateX(-8px); }
+  75% { transform: translate(-50%, -50%) translateX(8px); }
 }
 
-/* ------------------------------ */
-/* BUTTON */
-/* ------------------------------ */
+
+/* ========================================================================== */
+/* BUTTONS + SCORE DISPLAY */
+/* ========================================================================== */
 
 .score-display {
   display: flex;
   justify-content: center;
   align-items: center;
+
   font-size: 1.5rem;
   text-align: center;
-  margin-bottom: 0x;
+
   padding: 10px;
-  min-height: 3.4rem; /* prevents layout jumping */
-  white-space: pre-line; /* allows line breaks */
+  min-height: 3.4rem;   /* Keeps UI from shifting when score text changes */
+  white-space: pre-line; /* Supports line breaks via "\n" */
 }
 
-.score-good {
-  color: #00ff66;
-}
-
-.score-bad {
-  color: #ff4444;
-}
+.score-good { color: #00ff66; }
+.score-bad { color: #ff4444; }
 
 .button-container {
   display: flex;
@@ -309,7 +305,6 @@ button {
   border-radius: 50px;
   cursor: pointer;
   transition: 0.2s;
-  
 }
 
 button:hover {
@@ -321,40 +316,29 @@ button:active {
   transform: scale(1.15);
 }
 
-button:disabled {
-  background-color: #7f7f7f;
-  border-color: #4c4c4c;
-  cursor: not-allowed;
-  transform: none;
-}
-
+button:disabled,
 .level-btn:disabled {
   background-color: #7f7f7f;
   border-color: #4c4c4c;
+  cursor: not-allowed;
 }
 
-/* #resetBtn {
-  margin-right: 20px;
-}
 
-#backBtn {
-  margin-left: 20px;
-}
-
-#nextLvlBtn {
-  margin-left: 20px;
-} */
+/* ========================================================================== */
+/* AUDIO BUTTON + TOPBAR */
+/* ========================================================================== */
 
 .game-topbar {
   position: relative;
-  width: 100%;   /* match image max-width */
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+/* Audio toggle positioned independently of centered header */
 #audio-controls {
-  position: absolute;           /* ← key change */
-  top: -12px;                /* match your current visual */
+  position: absolute;
+  top: -12px;
   right: 0px;
 }
