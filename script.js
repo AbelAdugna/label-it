@@ -74,6 +74,32 @@ document.getElementById("backToTutorialBtn").addEventListener("click", () => {
 });
 
 
+// ---------------------------------------------
+// SKILL LEVEL DEFINITIONS (UI labels only)
+// ---------------------------------------------
+const SKILL_LEVELS = {
+  explorer: {
+    id: "explorer",
+    label: "The Explorer",
+  },
+  apprentice: {
+    id: "apprentice",
+    label: "The Apprentice",
+  },
+  scholar: {
+    id: "scholar",
+    label: "The Scholar",
+  },
+  Master: {
+    id: "master",
+    label: "The Master",
+  }
+};
+
+// Current skill level (hardcoded for now)
+let currentSkillLevel = "explorer";
+
+
 /* ============================================================================
    LEVEL DATA
    Defines each level’s title, image, and label positions.
@@ -81,6 +107,7 @@ document.getElementById("backToTutorialBtn").addEventListener("click", () => {
 ============================================================================ */
 
 const LEVELS = {
+  explorer: {
   1: {
     title: "Wood Plane",
     image: "Images/unlabeled-wood-plane.jpg",
@@ -159,6 +186,7 @@ const LEVELS = {
       { id: "mouth", label: "Mouth", top: "86%", left: "14%" },
     ],
   },
+}
 };
 
 
@@ -191,7 +219,7 @@ let currentLevelId = 1;
  */
 function loadLevel(levelId) {
   currentLevelId = levelId;
-  const level = LEVELS[levelId];
+  const level = LEVELS[currentSkillLevel][levelId];
   if (!level) return;
 
   placedAnswers = {};
