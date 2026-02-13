@@ -372,7 +372,7 @@ checkBtn.addEventListener("click", () => {
       "\nWell done! You labeled all parts correctly.";
 
     // Unlock next level if available
-    if (LEVELS[currentLevelId + 1]) {
+    if (LEVELS[currentSkillLevel][currentLevelId + 1]) {
       nextLvlBtn.classList.remove("hidden");
     }
   } else {
@@ -408,7 +408,7 @@ backBtn.addEventListener("click", () => {
 nextLvlBtn.addEventListener("click", () => {
   const nextLevelId = currentLevelId + 1;
 
-  if (LEVELS[nextLevelId]) {
+  if (LEVELS[currentSkillLevel][nextLevelId]) {
     loadLevel(nextLevelId);
     nextLvlBtn.classList.add("hidden");
 
